@@ -1,0 +1,40 @@
+.box-header {
+    height: 40px;
+}
+
+
+/*
+my css
+*/
+.indexBackground {
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    z-index:-1;
+    background-image: url(../img/1.png);
+    background-size: 100% 100%;
+}
+.loginTitle {
+    font-family: Georgia;
+    font-weight: bold;
+
+    /*
+    color:Linen;
+    */
+}
+.navbar-brand {
+    font-weight: bold;
+    font-size: 150%;
+    width: 200px;
+}
+
+.box-header .operation{
+    float: right;
+}
+/*
+.container {
+    idth: 970px !important;
+}
+*/
