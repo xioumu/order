@@ -10,23 +10,27 @@
             </div>
             <!--/row-->
 
-            <div class="row">
+            <div class="row" >
                 <div class="well col-md-5 center login-box">
-                    <div class="alert alert-info">
-                        请输入用户名和密码
-                    </div>
-                    <form class="form-horizontal" action="index.html" method="post">
+                    <?php if($info["errorPasswd"] == false): ?><div class="alert alert-info">
+                            请输入用户名和密码
+                        </div>
+                    <?php else: ?>
+                        <div class="alert alert-danger">
+                            用户名或密码错误
+                        </div><?php endif; ?>
+                    <form class="form-horizontal" action="/order/code/index.php/Home/Index/login" method="post" >
                         <fieldset>
                             <div class="input-group input-group-lg">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-user red"></i></span>
-                                <input type="text" class="form-control" placeholder="用户名">
+                                <input type="text" name = "username" id = "username" class="form-control" placeholder="用户名">
                             </div>
                             <div class="clearfix"></div>
                             <br>
 
                             <div class="input-group input-group-lg">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-lock red"></i></span>
-                                <input type="password" class="form-control" placeholder="密码">
+                                <input type="password" name = "passwd" id = "passwd" class="form-control" placeholder="密码">
                             </div>
                             <div class="clearfix"></div>
 
@@ -37,7 +41,7 @@
                             <div class="clearfix"></div>
 
                             <p class="center col-md-5">
-                                <button type="submit" class="btn btn-primary">登陆</button>
+                                <button type="submit" class="btn btn-primary" id = 'submit_login' onclick="mysubmit()">登陆</button>
                             </p>
                         </fieldset>
                     </form>
@@ -50,3 +54,27 @@
     </div>
 <!--/.fluid-container-->
 </div>
+<script>
+    function mysubmit() {
+        if ( $('#remember').prop('checked') == true) {
+            sessionStorage.username = $("#username").val();
+            sessionStorage.passwd = $("#passwd").val();
+            sessionStorage.remember = true;
+        }
+        else {
+            sessionStorage.username = ''
+            sessionStorage.passwd = ''
+            sessionStorage.remember = false;
+       }
+    }
+
+    function initialize() {
+        if(sessionStorage.username) {
+            $("#username").val(sessionStorage.username);
+            $("#passwd").val(sessionStorage.passwd);
+            $('#remember').prop('checked', sessionStorage.remember)
+        }
+    }
+
+    initialize();
+</script>

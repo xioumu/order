@@ -1,0 +1,18 @@
+[ 2015-04-17T14:17:54+08:00 ] 127.0.0.1 /order/code/index.php/Item
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000061s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001096s ]
+ERR: 无法加载模块:Item
+
+[ 2015-04-17T14:18:55+08:00 ] 127.0.0.1 /order/code/index.php/Item
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000031s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001229s ]
+ERR: 无法加载模块:Item
+
+[ 2015-04-17T14:18:58+08:00 ] 127.0.0.1 /order/code/index.php/Item
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000055s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001109s ]
+ERR: 无法加载模块:Item
+

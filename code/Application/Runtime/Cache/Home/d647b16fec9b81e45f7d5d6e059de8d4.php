@@ -31,6 +31,8 @@
 <script src="/order/code/Public/js/jquery.history.js"></script>
 <!-- application script for Charisma demo -->
 <script src="/order/code/Public/js/charisma.js"></script>
-
+<script src="/order/code/Public/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/order/code/Public/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="/order/code/Public/js/my.js"></script>
 </body>
 </html>

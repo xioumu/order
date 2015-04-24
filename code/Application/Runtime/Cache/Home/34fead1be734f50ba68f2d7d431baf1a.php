@@ -21,6 +21,7 @@
     <link href='/order/code/Public/css/jquery.iphone.toggle.css' rel='stylesheet'>
     <link href='/order/code/Public/css/uploadify.css' rel='stylesheet'>
     <link href='/order/code/Public/css/animate.min.css' rel='stylesheet'>
+    <link href='/order/code/Public/css/bootstrap-datetimepicker.min.css' rel='stylesheet'>
     <link href="/order/code/Public/css/my.css" rel="stylesheet">
     <!-- jQuery -->
     <script src="/order/code/Public/bower_components/jquery/jquery.min.js"></script>
