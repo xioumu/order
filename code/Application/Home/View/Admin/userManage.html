@@ -1,0 +1,85 @@
+<div id="content" class="col-lg-10 col-sm-10">
+    <!-- content starts -->
+    <div>
+        <ul class="breadcrumb">
+            <li><span>系统管理员</span></li>
+            <li><span>账号管理</span></li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="box col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2>号账管理</h2>
+
+                    <div class="operation">
+                        <a class="btn btn-info btn-sm" href="__MODULE__/Admin/addUser">
+                            添加账号
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content">
+                    <table class="table table-striped table-bordered bootstrap-datatable datatable ">
+                        <thead>
+                        <tr>
+                            <th>用户名</th>
+                            <th>类型</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <volist name="userList" id="userInfo">
+                            <tr id="tr_{$userInfo.username}">
+                                <td>{$userInfo.username}</td>
+                                <td>{$userInfo.typeName}</td>
+                                <td>
+                                    <if condition="$userInfo.type eq admin">
+                                        <a class="btn btn-danger btn-sm disabled" href="#">删除</a>
+                                        <else/>
+                                        <a class="btn btn-danger btn-sm" href="#"
+                                           onclick="delUser('{$userInfo.username}')">删除</a>
+                                    </if>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--/span-->
+    </div>
+    <!--/row-->
+    <!-- content ends -->
+</div>
+<!--/fluid-row-->
+
+<script>
+
+    function delUser($username) {
+        var r = confirm('确认删除这个用户?');
+        if (r == true) {
+            $.post("__MODULE__/Admin/delUserEvent", {
+                        username: $username
+                    },
+                    function (data, status) {
+                        if (status == 'success') {
+                            if (data == 'ok') {
+                                $('body').noty({"text": "删除成功", "layout": "topLeft", "type": "success"});
+                                $('#tr_' + $username).remove();
+                            }
+                            else {
+                                $('body').noty({"text": "error:" + data, "layout": "topLeft", "type": "error"});
+                            }
+                        }
+                        else {
+                            $('body').noty({"text": "js post error0!'", "layout": "topLeft", "type": "error"});
+                        }
+                    }
+            )
+        }
+    }
+</script>
+</div><!--/.fluid-container-->
+
+

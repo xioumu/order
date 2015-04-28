@@ -2,6 +2,9 @@
 namespace Home\Controller;
 use Think\Controller;
 class IndexController extends Controller {
+    public function _initialize() {
+        $this->public = A('Public');
+    }
     public function index($error_passwd = false){
         $this->display(T('Head/head'));
         $info['errorPasswd'] = $error_passwd;
@@ -13,11 +16,12 @@ class IndexController extends Controller {
         $username = I('post.username');
         $passwd = I('post.passwd');
         if ($this->checkLogin($username, $passwd)) {
-            echo 'right';
+            session('username', $username);
         }
         else {
             $this->index(true);
         }
+        $this->public->jumpIndex();
     }
 
     //验证登陆

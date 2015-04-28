@@ -8,9 +8,9 @@
                     </div>
                     <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">菜单</li>
-                        <li><a class="ajax-link" href="__MODULE__/Item"><span>物品管理</span></a> </li>
-                        <li><a class="ajax-link" href="__MODULE__/Order"><span>订单管理</span></a> </li>
-                        <li><a class="ajax-link" href="__MODULE__/Statistic"><span>统计信息</span></a> </li>
+                        <volist name="leftMenu" id="row">
+                            <li><a class="ajax-link" href="__MODULE__/{$row.url}"><span>{$row.name}</span></a> </li>
+                        </volist>
                     </ul>
                 </div>
             </div>

@@ -6,13 +6,13 @@
         <!-- user dropdown starts -->
         <div class="btn-group pull-right">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <i class="glyphicon glyphicon-user"></i><span class="hidden-sm hidden-xs"> 用户名</span>
+                <i class="glyphicon glyphicon-user"></i><span class="hidden-sm hidden-xs">{$navbar.username}</span>
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="#">修改密码</a></li>
+                <li><a href="__MODULE__/User/changePasswd/username/{$navbar.username}">修改密码</a></li>
                 <li class="divider"></li>
-                <li><a href="#">注销</a></li>
+                <li><a href="__MODULE__/User/logout">注销</a></li>
             </ul>
         </div>
         <!-- user dropdown ends -->

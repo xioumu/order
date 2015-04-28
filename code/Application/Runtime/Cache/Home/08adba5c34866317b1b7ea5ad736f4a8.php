@@ -8,9 +8,7 @@
                     </div>
                     <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">菜单</li>
-                        <li><a class="ajax-link" href="/order/code/index.php/Home/Item"><span>物品管理</span></a> </li>
-                        <li><a class="ajax-link" href="/order/code/index.php/Home/Order"><span>订单管理</span></a> </li>
-                        <li><a class="ajax-link" href="/order/code/index.php/Home/Statistic"><span>统计信息</span></a> </li>
+                        <?php if(is_array($leftMenu)): $i = 0; $__LIST__ = $leftMenu;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$row): $mod = ($i % 2 );++$i;?><li><a class="ajax-link" href="/order/code/index.php/Home/<?php echo ($row["url"]); ?>"><span><?php echo ($row["name"]); ?></span></a> </li><?php endforeach; endif; else: echo "" ;endif; ?>
                     </ul>
                 </div>
             </div>

@@ -57,22 +57,22 @@
 <script>
     function mysubmit() {
         if ( $('#remember').prop('checked') == true) {
-            sessionStorage.username = $("#username").val();
-            sessionStorage.passwd = $("#passwd").val();
-            sessionStorage.remember = true;
+            localStorage.username = $("#username").val();
+            localStorage.passwd = $("#passwd").val();
+            localStorage.remember = true;
         }
         else {
-            sessionStorage.username = ''
-            sessionStorage.passwd = ''
-            sessionStorage.remember = false;
+            localStorage.username = ''
+            localStorage.passwd = ''
+            localStorage.remember = false;
        }
     }
 
     function initialize() {
-        if(sessionStorage.username) {
-            $("#username").val(sessionStorage.username);
-            $("#passwd").val(sessionStorage.passwd);
-            $('#remember').prop('checked', sessionStorage.remember)
+        if(localStorage.username) {
+            $("#username").val(localStorage.username);
+            $("#passwd").val(localStorage.passwd);
+            $('#remember').prop('checked', localStorage.remember)
         }
     }
 
