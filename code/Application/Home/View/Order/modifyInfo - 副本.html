@@ -1,8 +1,8 @@
-<?php if (!defined('THINK_PATH')) exit();?><div id="content" class="col-lg-10 col-sm-10">
+<div id="content" class="col-lg-10 col-sm-10">
     <!-- content starts -->
     <div>
         <ul class="breadcrumb">
-            <li><span><?php echo ($user["typeName"]); ?></span></li>
+            <li><span>{$user.typeName}</span></li>
             <li><span>订单管理</span></li>
             <li><span>订单详情</span></li>
         </ul>
@@ -19,33 +19,33 @@
                     </div>
                 </div>
                 <div class="box-content">
-                    <form class="form-horizontal" action="/order/code/index.php/Home/Order/modifyInfoEvent/<?php echo ($order["oid"]); ?>" method="post">
+                    <form class="form-horizontal" action="__MODULE__/Order/modifyInfoEvent/{$order.oid}" method="post">
                         <div class="form-group">
                             <label for="name" class="col-sm-2 control-label">名称</label>
 
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="name" name = "name" value="<?php echo ($order["name"]); ?>">
+                                <input type="text" class="form-control" id="name" name = "name" value="{$order.name}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="buyer" class="col-sm-2 control-label">采购员</label>
 
                             <div class="col-sm-10">
-                                <input type="text" class="form-control disable" id="buyer" name="buyer" value="<?php echo ($order["buyer"]); ?>">
+                                <input type="text" class="form-control disable" id="buyer" name="buyer" value="{$order.buyer}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="creations" class="col-sm-2 control-label">创建者</label>
 
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="creations" value="<?php echo ($order["creator"]); ?>" disabled>
+                                <input type="text" class="form-control" id="creations" value="{$order.creator}" disabled>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="creationTime" class="col-sm-2 control-label">创建时间</label>
 
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="creationTime" value="<?php echo ($order["creation_time"]); ?>" disabled>
+                                <input type="text" class="form-control" id="creationTime" value="{$order.creation_time}" disabled>
                             </div>
                         </div>
                         <div class="form-group">
@@ -96,7 +96,7 @@
                     <h2> 物品详单</h2>
 
                     <div class="operation">
-                        <a class="btn btn-info btn-sm" href="/order/code/index.php/Home/Order/orderItemInfo/<?php echo ($order["oid"]); ?>/add">
+                        <a class="btn btn-info btn-sm" href="__MODULE__/Order/orderItemInfo/{$order.oid}/add">
                             添加物品
                         </a>
                     </div>
@@ -135,7 +135,7 @@
                             <td>10</td>
                             <td>100</td>
                             <td>
-                                <a class="btn btn-info btn-sm" href="/order/code/index.php/Home/Order/orderItemInfo">修改</a>
+                                <a class="btn btn-info btn-sm" href="__MODULE__/Order/orderItemInfo">修改</a>
                                 <a class="btn btn-danger btn-sm" href="#">删除</a>
                             </td>
                         </tr>

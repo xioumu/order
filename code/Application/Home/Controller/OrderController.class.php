@@ -14,8 +14,11 @@ class OrderController extends Controller {
         $this->leftMenu->index();
 
         $User = D('User');
+        $Order = D('Order');
         $userInfo = $User->getInfo();
+        $orderList = $Order->getOrderList($userInfo);
         $this->assign('user', $userInfo);
+        $this->assign('orderList', $orderList);
         $this->display('Order:orderList');
         $this->display(T('Tail/tail'));
     }
@@ -38,6 +41,8 @@ class OrderController extends Controller {
         $this->display(T('Head/head'));
         $this->navbar->index();
         $this->leftMenu->index();
+
+        $OrderItem = D('OrderItem');
         $User = D('User');
         $userInfo = $User->getInfo();
         $orderInfo['oid'] = $oid;
@@ -45,6 +50,9 @@ class OrderController extends Controller {
             $orderItemInfo['oiid'] = 'add';
             $breadcrumb['now'] = '添加订单物品';
             $this->assign('breadcrumb', $breadcrumb);
+        }
+        else {
+            $orderItemInfo = $OrderItem->getOrderItemInfo($oiid);
         }
         $this->assign('orderItem', $orderItemInfo);
         $this->assign('user', $userInfo);
@@ -68,7 +76,7 @@ class OrderController extends Controller {
         }
     }
 
-    //修改订单
+    //展现、修改订单
     public function modifyInfo($oid) {
         $this->display(T('Head/head'));
         $this->navbar->index();
@@ -76,10 +84,13 @@ class OrderController extends Controller {
 
         $Order = D('Order');
         $User = D('User');
+        $OrderItem = D('OrderItem');
         $userInfo = $User->getInfo();
-        $orderInfo = $Order->getOrderInfo($oid, $userInfo['username']);
+        $orderInfo = $Order->getOrderInfo($oid);
+        $orderItemList = $OrderItem->getOrderItemList($oid);
         $this->assign('user', $userInfo);
         $this->assign('order', $orderInfo);
+        $this->assign('orderItemList', $orderItemList);
         $this->display('Order:modifyInfo');
         $this->display(T('Tail/tail'));
     }
@@ -104,7 +115,7 @@ class OrderController extends Controller {
             $OrderItemInfo = $OrderItem->getNewInfo($oid);
         }
         else {
-            //$OrderItemInfo = $OrderItem->getModifyInfo($oid);
+            $OrderItemInfo = $OrderItem->getModifyInfo($oid, $oiid);
         }
         if (!$OrderItem->create($OrderItemInfo)) {
             $this->error($OrderItem->getError());
@@ -118,5 +129,57 @@ class OrderController extends Controller {
         }
     }
 
+    //删除订单物品
+    public function delOrderItemEvent() {
+        $OrderItem = D('OrderItem');
+        $condition['oiid'] = I('post.oiid');
+        if (!$OrderItem->where($condition)->delete()) {
+            $this->ajaxReturn('sql error');
+        }
+        else {
+            $this->ajaxReturn('ok');
+        }
+    }
+
+    //删除订单
+    public function delOrderEvent() {
+        $Order = D('Order');
+        $OrderItem = D('OrderItem');
+        $condition['oid'] = I('post.oid');
+        //删除订单物品
+        if ($OrderItem->where($condition)->delete() === false) {
+            $this->ajaxReturn('delete order item error');
+        }
+        else {
+            //删除订单
+            if (!$Order->where($condition)->delete()) {
+                $this->ajaxReturn('sql error');
+            } else {
+                $this->ajaxReturn('ok');
+            }
+        }
+    }
+
+    //复制订单事件
+    public function copyOrderEvent($oid){
+        $Order = D('Order');
+        if ($Order->copyOrder($oid)) {
+            $this->success('复制订单成功', U('Home/Order/index'));
+        }
+        else {
+            $this->error('复制订单失败');
+        }
+    }
+
+    //提交订单、提交审批
+    public function submitEvent($oid) {
+        $Order = D('Order');
+        if ($Order->submitOrder($oid)) {
+            $this->success('提交成功', U('Home/Order/index'));
+        }
+        else {
+            $this->error('提交失败');
+        }
+    }
 }
 ?>

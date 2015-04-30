@@ -2,7 +2,7 @@
     <!-- content starts -->
     <div>
         <ul class="breadcrumb">
-            <li><span><?php echo ($user["type"]); ?></span></li>
+            <li><span><?php echo ($user["typeName"]); ?></span></li>
             <li><span>订单管理</span></li>
         </ul>
     </div>
@@ -32,71 +32,21 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>主食</td>
-                            <td>staff1</td>
-                            <td>赵子龙</td>
-                            <td>2015-04-16 23:06</td>
-                            <td>981</td>
-                            <td><span class="label label-warning">未提交</span></td>
-                            <td>
-                                <a class="btn btn-info btn-sm" href="/order/code/index.php/Home/Order/orderInfo">详细信息</a>
-                                <a class="btn btn-info btn-sm" href="#">复制订单</a>
-                                <a class="btn btn-danger btn-sm" href="#">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>肉类</td>
-                            <td>staff1</td>
-                            <td>赵子龙</td>
-                            <td>2015-04-16 23:06</td>
-                            <td>981</td>
-                            <td><span class="label label-info">审批者审批中</span></td>
-                            <td>
-                                <a class="btn btn-info btn-sm" href="#">详细信息</a>
-                                <a class="btn btn-info btn-sm" href="#">复制订单</a>
-                                <a class="btn btn-danger btn-sm disabled" href="#">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>蔬菜</td>
-                            <td>staff1</td>
-                            <td>赵子龙</td>
-                            <td>2015-04-16 23:06</td>
-                            <td>981</td>
-                            <td><span class="label label-info">老板审批中</span></td>
-                            <td>
-                                <a class="btn btn-info btn-sm" href="#">详细信息</a>
-                                <a class="btn btn-info btn-sm" href="#">复制订单</a>
-                                <a class="btn btn-danger btn-sm disabled" href="#">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>水果</td>
-                            <td>staff2</td>
-                            <td>关云长</td>
-                            <td>2015-04-15 23:06</td>
-                            <td>781</td>
-                            <td><span class="label label-success">审批通过</span></td>
-                            <td>
-                                <a class="btn btn-info btn-sm" href="#">详细信息</a>
-                                <a class="btn btn-info btn-sm" href="#">复制订单</a>
-                                <a class="btn btn-danger btn-sm" href="#">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>水果</td>
-                            <td>staff2</td>
-                            <td>关云长</td>
-                            <td>2015-04-15 23:06</td>
-                            <td>781</td>
-                            <td><span class="label label-danger">被驳回</span></td>
-                            <td>
-                                <a class="btn btn-info btn-sm" href="#">详细信息</a>
-                                <a class="btn btn-info btn-sm" href="#">复制订单</a>
-                                <a class="btn btn-danger btn-sm" href="#">删除</a>
-                            </td>
-                        </tr>
+                        <?php if(is_array($orderList)): $i = 0; $__LIST__ = $orderList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$order): $mod = ($i % 2 );++$i;?><tr id="tr_<?php echo ($order["oid"]); ?>">
+                                <td><?php echo ($order["name"]); ?></td>
+                                <td><?php echo ($order["creator"]); ?></td>
+                                <td><?php echo ($order["buyer"]); ?></td>
+                                <td><?php echo ($order["creation_time"]); ?></td>
+                                <td><?php echo (round($order["total_price"],2)); ?></td>
+                                <td><?php echo ($order["status"]); ?></td>
+                                <td>
+                                    <a class="btn btn-info btn-sm"
+                                       href="/order/code/index.php/Home/Order/modifyInfo/<?php echo ($order["oid"]); ?>">详细信息</a>
+                                    <?php if($user["type"] == staff): ?><a class="btn btn-info btn-sm" href="/order/code/index.php/Home/Order/copyOrderEvent/<?php echo ($order["oid"]); ?>">复制订单</a>
+                                        <button class="btn btn-danger btn-sm" onclick="delOrder(<?php echo ($order["oid"]); ?>)">删除
+                                        </button><?php endif; ?>
+                                </td>
+                            </tr><?php endforeach; endif; else: echo "" ;endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -110,3 +60,29 @@
 <!--/fluid-row-->
 
 </div><!--/.fluid-container-->
+
+<script>
+    function delOrder($oid) {
+        var r = confirm('确认删除这个订单?');
+        if (r == true) {
+            $.post("/order/code/index.php/Home/Order/delOrderEvent", {
+                        oid: $oid
+                    },
+                    function (data, status) {
+                        if (status == 'success') {
+                            if (data == 'ok') {
+                                $('body').noty({"text": "删除成功", "layout": "topLeft", "type": "success"});
+                                $('#tr_' + $oid).remove();
+                            }
+                            else {
+                                $('body').noty({"text": "error:" + data, "layout": "topLeft", "type": "error"});
+                            }
+                        }
+                        else {
+                            $('body').noty({"text": "js post error0!'", "layout": "topLeft", "type": "error"});
+                        }
+                    }
+            )
+        }
+    }
+</script>
