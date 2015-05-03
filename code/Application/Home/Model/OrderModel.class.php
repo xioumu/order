@@ -278,6 +278,38 @@ class OrderModel extends Model{
             return true;
         }
     }
+
+    //获取所有订单的创始人
+    public function getCreatorList() {
+        $res = $this->distinct(true)->field('creator')->select();
+        return $res;
+    }
+
+    //获取订单物品的统计信息
+    public function getStatisticItemList($begin_date, $end_date, $creator) {
+        $condition['creation_time'] = array('between', array($begin_date . " 00:00:00", $end_date . " 23:59:59"));
+        $condition['type'] = 'accept';
+        if ($creator != 'all')
+            $condition['creator'] = $creator;
+        $orderItemList = $this->join('order_item on order.oid = order_item.oid')->where($condition)->select();
+        $statisticInfo = array();
+        foreach ($orderItemList as $item) {
+            if (!array_key_exists($item['name'], $statisticInfo)) {
+                $statisticInfo[$item['name']] = $item;
+                $statisticInfo[$item['name']]['sumPrice'] = 0;
+                $statisticInfo[$item['name']]['sumQuantity'] = 0;
+            }
+            elseif ($statisticInfo[$item['name']]['creator_time'] < $item['creator_time']) {
+                $statisticInfo[$item['name']]['scale'] = $item['scale'];
+                $statisticInfo[$item['name']]['remark'] = $item['remark'];
+                $statisticInfo[$item['name']]['price'] = $item['price'];
+            }
+            $statisticInfo[$item['name']]['sumPrice'] += $item['price'] * $item['quantity'];
+            $statisticInfo[$item['name']]['sumQuantity'] += $item['quantity'];
+        }
+        return $statisticInfo;
+    }
 }
+
 
 ?>

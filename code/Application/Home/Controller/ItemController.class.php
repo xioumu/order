@@ -7,6 +7,7 @@ class ItemController extends Controller {
         $this->leftMenu = A('LeftMenu');
     }
 
+    //展现物品列表页面
     public function index(){
         $this->display(T('Head/head'));
         $this->navbar->index();
@@ -21,6 +22,7 @@ class ItemController extends Controller {
         $this->display(T('Tail/tail'));
     }
 
+    //物品详情页面
     public function itemInfo($iid) {
         $this->display(T('Head/head'));
         $this->navbar->index();
@@ -43,6 +45,7 @@ class ItemController extends Controller {
         $this->display(T('Tail/tail'));
     }
 
+    //修改物品页面
     public function modifyInfoEvent($iid) {
         $Item = D('Item');
         $itemInfo = I('post.');
@@ -69,6 +72,33 @@ class ItemController extends Controller {
             else
                 $Item->save();
             $this->success("提交成功", U('Home/Item/index'));
+        }
+    }
+
+    //删除物品事件
+    public function delItemEvent(){
+        $iid = I('post.iid');
+        $condition['iid'] = $iid;
+        $Item = D('Item');
+        if (!$Item->where($condition)->delete()) {
+            $this->ajaxReturn('sql error');
+        }
+        else {
+            $this->ajaxReturn('ok');
+        }
+    }
+
+    //批量删除物品事件
+    public function delMultipleItemEvent(){
+        $Item = D('Item');
+        $deleteIid = I('post.deleteCheckbox');
+        $condition['iid'] = array('in', $deleteIid);
+        $res = $Item->where($condition)->delete();
+        if ($res == count($deleteIid)) {
+            $this->success('删除成功', U('Home/Item/index'));
+        }
+        else {
+            $this->success('删除失败', U('Home/Item/index'));
         }
     }
 }
