@@ -88,8 +88,10 @@ class OrderController extends Controller {
         $userInfo = $User->getInfo();
         $orderInfo = $Order->getOrderInfo($oid);
         $orderItemList = $OrderItem->getOrderItemList($oid);
+        $permission['order'] = $Order->getOrderPermission($userInfo, $orderInfo);
         $this->assign('user', $userInfo);
         $this->assign('order', $orderInfo);
+        $this->assign('permission', $permission);
         $this->assign('orderItemList', $orderItemList);
         $this->display('Order:modifyInfo');
         $this->display(T('Tail/tail'));
@@ -144,19 +146,11 @@ class OrderController extends Controller {
     //删除订单
     public function delOrderEvent() {
         $Order = D('Order');
-        $OrderItem = D('OrderItem');
-        $condition['oid'] = I('post.oid');
-        //删除订单物品
-        if ($OrderItem->where($condition)->delete() === false) {
-            $this->ajaxReturn('delete order item error');
+        if (!$Order->delOrder(I('post.oid'))) {
+            $this->ajaxReturn('delete error');
         }
         else {
-            //删除订单
-            if (!$Order->where($condition)->delete()) {
-                $this->ajaxReturn('sql error');
-            } else {
-                $this->ajaxReturn('ok');
-            }
+            $this->ajaxReturn('ok');
         }
     }
 
@@ -172,9 +166,11 @@ class OrderController extends Controller {
     }
 
     //提交订单、提交审批
-    public function submitEvent($oid) {
+    public function submitEvent($oid, $accept = true) {
         $Order = D('Order');
-        if ($Order->submitOrder($oid)) {
+        if ($accept === 'false')
+            $accept = false;
+        if ($Order->submitOrder($oid, $accept)) {
             $this->success('提交成功', U('Home/Order/index'));
         }
         else {

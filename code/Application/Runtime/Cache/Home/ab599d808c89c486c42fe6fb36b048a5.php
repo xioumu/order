@@ -70,27 +70,21 @@
 
                             <div class="col-sm-10">
                                 <div class=" well" id="remark">
-                                    审批者：审批者<br>
-                                    审批时间：2015-4-17 22:20<br>
-                                    <blockquote>添加物品：香蕉<br>
-                                        修改物品“苹果”数量：10 改为 20<br>
-                                        修改物品“苹果”价格：1 改为 2<br>
-                                    </blockquote>
-                                    <hr>
-                                    审批者：老板<br>
-                                    审批时间：2015-4-18 22:20<br>
-                                    <blockquote>添加物品：荔枝<br>
-                                        修改物品“苹果”数量：20 改为 15<br>
-                                        修改物品“苹果”价格：2 改为 4<br>
-                                    </blockquote>
-                                    <hr>
+                                    <?php if(is_array($order["change_remark"])): $i = 0; $__LIST__ = $order["change_remark"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$remark): $mod = ($i % 2 );++$i;?>审批者：<?php echo ($remark["username"]); ?><br>
+                                        <blockquote><?php if(is_array($remark["content"])): $i = 0; $__LIST__ = $remark["content"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$content): $mod = ($i % 2 );++$i; if($content["type"] == order): ?>修改订单<?php echo ($content["attribute_name"]); ?>："<?php echo ($content["old_val"]); ?>" 改为 "<?php echo ($content["new_val"]); ?>"<br>
+                                                    <?php elseif($content["type"] == del): ?>删除物品"<?php echo ($content["item_name"]); ?>"<?php echo ($content["attribute_name"]); ?><br>
+                                                    <?php elseif($content["type"] == add): ?>添加物品"<?php echo ($content["item_name"]); ?>"<?php echo ($content["attribute_name"]); ?><br>
+                                                    <?php elseif($content["type"] == modify): ?>修改物品"<?php echo ($content["item_name"]); ?>"<?php echo ($content["attribute_name"]); ?>："<?php echo ($content["old_val"]); ?>" 改为 "<?php echo ($content["new_val"]); ?>"<br><?php endif; endforeach; endif; else: echo "" ;endif; ?>
+                                        </blockquote>
+                                        <hr><?php endforeach; endif; else: echo "" ;endif; ?>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-info">保存</button>
-                                <a class="btn btn-info" href="/order/code/index.php/Home/Order/submitEvent/<?php echo ($order["oid"]); ?>">提交审批</a>
+                                <?php if($permission["order"] == true): ?><button type="submit" class="btn btn-info">保存</button>
+                                    <a class="btn btn-info" href="/order/code/index.php/Home/Order/submitEvent/<?php echo ($order["oid"]); ?>">提交审批</a>
+                                    <?php if(($order["type"] == checker) OR ($order["type"] == boss)): ?><a class="btn btn-danger" href="/order/code/index.php/Home/Order/submitEvent/<?php echo ($order["oid"]); ?>/false">驳回审批</a><?php endif; endif; ?>
                             </div>
                         </div>
                     </form>
@@ -106,9 +100,9 @@
                     <h2> 物品详单</h2>
 
                     <div class="operation">
-                        <a class="btn btn-info btn-sm" href="/order/code/index.php/Home/Order/orderItemInfo/<?php echo ($order["oid"]); ?>/add">
-                            添加物品
-                        </a>
+                        <?php if($permission["order"] == true): ?><a class="btn btn-info btn-sm" href="/order/code/index.php/Home/Order/orderItemInfo/<?php echo ($order["oid"]); ?>/add">
+                                添加物品
+                            </a><?php endif; ?>
                     </div>
                 </div>
                 <div class="box-content">
@@ -121,7 +115,7 @@
                             <th>购买数量</th>
                             <th>购买总价(元)</th>
                             <th>备注</th>
-                            <th>操作</th>
+                            <?php if($permission["order"] == true): ?><th>操作</th><?php endif; ?>
                         </tr>
                         </thead>
                         <tbody>
@@ -132,10 +126,10 @@
                                 <td><?php echo ($orderItem["quantity"]); ?></td>
                                 <td><?php echo (round($orderItem["total_price"],2)); ?></td>
                                 <td><?php echo ($orderItem["remark"]); ?></td>
-                                <td>
-                                    <a class="btn btn-info btn-sm" href="/order/code/index.php/Home/Order/orderItemInfo/<?php echo ($orderItem["oid"]); ?>/<?php echo ($orderItem["oiid"]); ?>">修改</a>
-                                    <button class="btn btn-danger btn-sm" onclick="delOrderItem(<?php echo ($orderItem["oiid"]); ?>)">删除</button>
-                                </td>
+                                <?php if($permission["order"] == true): ?><td>
+                                        <a class="btn btn-info btn-sm" href="/order/code/index.php/Home/Order/orderItemInfo/<?php echo ($orderItem["oid"]); ?>/<?php echo ($orderItem["oiid"]); ?>">修改</a>
+                                        <button class="btn btn-danger btn-sm" onclick="delOrderItem(<?php echo ($orderItem["oiid"]); ?>)">删除</button>
+                                    </td><?php endif; ?>
                             </tr><?php endforeach; endif; else: echo "" ;endif; ?>
                         </tbody>
                     </table>

@@ -14,11 +14,11 @@ class PublicController extends Controller {
         if ($userType == 'admin') {
             $this->redirect('/Home/Admin/userManage');
         }
-        elseif ($userType == 'staff') {
+        elseif ($userType == 'staff' or $userType == 'checker' or $userType == 'boss' or $userType == 'observer') {
             $this->redirect('/Home/Order/index');
         }
         else {
-            echo $userType;
+            //echo $userType;
             echo 'type error';
         }
     }

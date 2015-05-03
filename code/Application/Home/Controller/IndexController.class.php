@@ -17,11 +17,11 @@ class IndexController extends Controller {
         $passwd = I('post.passwd');
         if ($this->checkLogin($username, $passwd)) {
             session('username', $username);
+            $this->public->jumpIndex();
         }
         else {
             $this->index(true);
         }
-        $this->public->jumpIndex();
     }
 
     //验证登陆

@@ -31,6 +31,15 @@ class OrderItemModel extends Model {
         return $orderItemList;
     }
 
+    public function getOrderItemListNameKey($oid){
+        $res = array();
+        $itemList = $this->getOrderItemList($oid);
+        foreach ($itemList as $item) {
+            $res[$item['name']] = $item;
+        }
+        return $res;
+    }
+
     //获取订单中物品的信息
     public function getOrderItemInfo($oiid) {
         $condition['oiid'] = $oiid;
@@ -38,5 +47,6 @@ class OrderItemModel extends Model {
         $orderItemInfo['totalPrice'] = $orderItemInfo['count'] * $orderItemInfo['price'];
         return $orderItemInfo;
     }
+
 
 }

@@ -70,27 +70,30 @@
 
                             <div class="col-sm-10">
                                 <div class=" well" id="remark">
-                                    审批者：审批者<br>
-                                    审批时间：2015-4-17 22:20<br>
-                                    <blockquote>添加物品：香蕉<br>
-                                        修改物品“苹果”数量：10 改为 20<br>
-                                        修改物品“苹果”价格：1 改为 2<br>
-                                    </blockquote>
-                                    <hr>
-                                    审批者：老板<br>
-                                    审批时间：2015-4-18 22:20<br>
-                                    <blockquote>添加物品：荔枝<br>
-                                        修改物品“苹果”数量：20 改为 15<br>
-                                        修改物品“苹果”价格：2 改为 4<br>
-                                    </blockquote>
-                                    <hr>
+                                    <volist name="order.change_remark" id="remark">
+                                        审批者：{$remark.username}<br>
+                                        <blockquote><volist name="remark.content" id="content">
+                                                    <if condition="$content.type eq order">修改订单{$content.attribute_name}："{$content.old_val}" 改为 "{$content.new_val}"<br>
+                                                    <elseif condition="$content.type eq del"/>删除物品"{$content.item_name}"{$content.attribute_name}<br>
+                                                    <elseif condition="$content.type eq add"/>添加物品"{$content.item_name}"{$content.attribute_name}<br>
+                                                    <elseif condition="$content.type eq modify"/>修改物品"{$content.item_name}"{$content.attribute_name}："{$content.old_val}" 改为 "{$content.new_val}"<br>
+                                                    </if>
+                                            </volist>
+                                        </blockquote>
+                                        <hr>
+                                    </volist>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-info">保存</button>
-                                <a class="btn btn-info" href="__MODULE__/Order/submitEvent/{$order.oid}">提交审批</a>
+                                <if condition="$permission.order eq true">
+                                    <button type="submit" class="btn btn-info">保存</button>
+                                    <a class="btn btn-info" href="__MODULE__/Order/submitEvent/{$order.oid}">提交审批</a>
+                                    <if condition="($order.type eq checker) OR ($order.type eq boss)">
+                                        <a class="btn btn-danger" href="__MODULE__/Order/submitEvent/{$order.oid}/false">驳回审批</a>
+                                    </if>
+                                </if>
                             </div>
                         </div>
                     </form>
@@ -106,9 +109,11 @@
                     <h2> 物品详单</h2>
 
                     <div class="operation">
-                        <a class="btn btn-info btn-sm" href="__MODULE__/Order/orderItemInfo/{$order.oid}/add">
-                            添加物品
-                        </a>
+                        <if condition="$permission.order eq true">
+                            <a class="btn btn-info btn-sm" href="__MODULE__/Order/orderItemInfo/{$order.oid}/add">
+                                添加物品
+                            </a>
+                        </if>
                     </div>
                 </div>
                 <div class="box-content">
@@ -121,7 +126,9 @@
                             <th>购买数量</th>
                             <th>购买总价(元)</th>
                             <th>备注</th>
-                            <th>操作</th>
+                            <if condition="$permission.order eq true">
+                                <th>操作</th>
+                            </if>
                         </tr>
                         </thead>
                         <tbody>
@@ -133,10 +140,12 @@
                                 <td>{$orderItem.quantity}</td>
                                 <td>{$orderItem.total_price|round=2}</td>
                                 <td>{$orderItem.remark}</td>
-                                <td>
-                                    <a class="btn btn-info btn-sm" href="__MODULE__/Order/orderItemInfo/{$orderItem.oid}/{$orderItem.oiid}">修改</a>
-                                    <button class="btn btn-danger btn-sm" onclick="delOrderItem({$orderItem.oiid})">删除</button>
-                                </td>
+                                <if condition="$permission.order eq true">
+                                    <td>
+                                        <a class="btn btn-info btn-sm" href="__MODULE__/Order/orderItemInfo/{$orderItem.oid}/{$orderItem.oiid}">修改</a>
+                                        <button class="btn btn-danger btn-sm" onclick="delOrderItem({$orderItem.oiid})">删除</button>
+                                    </td>
+                                </if>
                             </tr>
                         </volist>
                         </tbody>

@@ -13,20 +13,20 @@
                     <h2>订单管理</h2>
 
                     <div class="operation">
-                        <a class="btn btn-info btn-sm" href="/order/code/index.php/Home/Order/addOrder">
-                            添加订单
-                        </a>
+                        <?php if($user["type"] == staff): ?><a class="btn btn-info btn-sm" href="/order/code/index.php/Home/Order/addOrder">
+                                添加订单
+                            </a><?php endif; ?>
                     </div>
                 </div>
                 <div class="box-content">
-                    <table class="table table-striped table-bordered bootstrap-datatable datatable ">
+                    <table id = 'order_list' class="table table-striped table-bordered bootstrap-datatable datatable ">
                         <thead>
                         <tr>
                             <th>名称</th>
                             <th>创建者</th>
                             <th>采购员</th>
                             <th>创建时间</th>
-                            <th>总价</th>
+                            <th>总价(元)</th>
                             <th>状态</th>
                             <th>操作</th>
                         </tr>
@@ -38,7 +38,15 @@
                                 <td><?php echo ($order["buyer"]); ?></td>
                                 <td><?php echo ($order["creation_time"]); ?></td>
                                 <td><?php echo (round($order["total_price"],2)); ?></td>
-                                <td><?php echo ($order["status"]); ?></td>
+                                <td><span class="label
+                                <?php if($order["type"] == staff): ?>label-warning">
+                                    <?php elseif($order["type"] == accept): ?>
+                                    label-success">
+                                    <?php elseif(($order["type"] == checkerReject) OR ($order["type"] == bossReject)): ?>
+                                    label-danger">
+                                    <?php elseif(($order["type"] == boss) OR ($order["type"] == checker)): ?>
+                                    label-info"><?php endif; ?>
+                                <?php echo ($order["status"]); ?></span></td>
                                 <td>
                                     <a class="btn btn-info btn-sm"
                                        href="/order/code/index.php/Home/Order/modifyInfo/<?php echo ($order["oid"]); ?>">详细信息</a>

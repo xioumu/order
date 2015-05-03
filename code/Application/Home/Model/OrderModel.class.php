@@ -18,12 +18,100 @@ class OrderModel extends Model{
         $orderInfo['show'] = 1;
         return $orderInfo;
     }
+
     //获取订单信息
     public function getOrderInfo($oid){
         $condition['oid'] = $oid;
         $orderInfo = $this->where($condition)->find();
         $orderInfo['total_price'] = $this->getOrderTotalPrice($oid);
+        $orderInfo['change_remark'] = $this->getChangeRemark($orderInfo);
         return $orderInfo;
+    }
+
+    //生成修改备注
+    public function getChangeRemark($orderInfo){
+        if ($orderInfo['from_oid'] == NULL) return array();
+        $remarkList = array();
+        $condition['oid'] = $orderInfo['from_oid'];
+        $oldOrderInfo = $this->where($condition)->find();
+        $userInfo = M('User')->where("type='" . $orderInfo['type'] . "'" )->find();
+        $remark['username'] = $userInfo['username'];
+        $remark['content'] =  array();
+        $orderInfoRemark = $this->getOrderInfoRemark($orderInfo, $oldOrderInfo);
+        $ItemChangeRemark = $this->getItemRemark($orderInfo, $oldOrderInfo);
+        $remark['content'] = array_merge($remark['content'], $ItemChangeRemark);
+        $remark['content'] = array_merge($remark['content'], $orderInfoRemark);
+        $remarkList = $this->getChangeRemark($oldOrderInfo);
+        if (count($remark['content']) != 0) {
+            array_push($remarkList, $remark);
+        }
+        return $remarkList;
+    }
+
+    //生成订单信息修改备注
+    public function getOrderInfoRemark($order, $oldOrder) {
+        $orderInfoRemarkList = array();
+        $attributeList = array('name', 'buyer');
+        $nameList = array('名称', '采购员');
+        for ($i = 0; $i < count($attributeList); $i++){
+            if ($order[$attributeList[$i]] != $oldOrder[$attributeList[$i]]) {
+                $orderInfoRemark['type'] = 'order';
+                $orderInfoRemark['item_name'] = '订单';
+                $orderInfoRemark['attribute_name'] = $nameList[$i];
+                $orderInfoRemark['old_val'] = $oldOrder[$attributeList[$i]];
+                $orderInfoRemark['new_val'] = $order[$attributeList[$i]];
+                array_push($orderInfoRemarkList, $orderInfoRemark);
+            }
+        }
+        return $orderInfoRemarkList;
+    }
+
+    //生成订单物品修改备注
+    public function getItemRemark($order, $oldOrder){
+        $itemRemark = array();
+        $OrderItem = D('OrderItem');
+        $itemList = $OrderItem->getOrderItemListNameKey($order['oid']);
+        $oldItemList = $OrderItem->getOrderItemListNameKey($oldOrder['oid']);
+        $itemRemark = array_merge($itemRemark, $this->getItemRemarkAdd($itemList, $oldItemList, 'add'));
+        $itemRemark = array_merge($itemRemark, $this->getItemRemarkAdd($oldItemList, $itemList, 'del'));  //获取删除的评论
+        $itemRemark = array_merge($itemRemark, $this->getItemRemarkModify($itemList, $oldItemList));
+        return $itemRemark;
+    }
+
+    //获取订单新增或删除物品的记录
+    public function getItemRemarkAdd($itemList, $oldItemList, $typeName) {
+        $itemRemark = array();
+        foreach ($itemList as $item) {
+           if (!array_key_exists($item['name'], $oldItemList)) {
+               $remark['item_name'] = $item['name'];
+               $remark['type'] = $typeName;
+               array_push($itemRemark, $remark);
+           }
+        }
+        return $itemRemark;
+    }
+
+    //获取物品修改的记录
+    public function getItemRemarkModify($itemList, $oldItemList) {
+        $itemRemark = array();
+        $attributeList = array('scale', 'price', 'quantity', 'remark');
+        $nameList = array('规格', '价格',  '数量', '备注');
+        foreach ($itemList as $item) {
+            if (array_key_exists($item['name'], $oldItemList)) {
+                $oldItem = $oldItemList[$item['name']];
+                for ($i = 0; $i < count($nameList); $i++) {
+                    if ($item[$attributeList[$i]] != $oldItem[$attributeList[$i]]) {
+                        $remark['type'] = 'modify';
+                        $remark['item_name'] = $item['name'];
+                        $remark['attribute_name'] = $nameList[$i];
+                        $remark['old_val'] = $oldItem[$attributeList[$i]];
+                        $remark['new_val'] = $item[$attributeList[$i]];
+                        array_push($itemRemark, $remark);
+                    }
+                }
+            }
+        }
+        return $itemRemark;
     }
 
     //获取订单总价
@@ -36,6 +124,7 @@ class OrderModel extends Model{
             $totalPrice += $item['total_price'];
         return $totalPrice;
     }
+
     //获取修改订单信息
     public function getModifyInfo($oid) {
         $orderInfo['name'] = I('post.name');
@@ -50,7 +139,7 @@ class OrderModel extends Model{
         if ($userInfo['type'] == 'staff') {
             $condition['creator'] = $userInfo['username'];
         }
-        $orderList = $this->where($condition)->select();
+        $orderList = $this->where($condition)->order('creation_time desc')->select();
         for ($i = 0; $i < count($orderList); $i++){
             $orderList[$i]['total_price'] = $this->getOrderTotalPrice($orderList[$i]['oid']);
         }
@@ -63,6 +152,8 @@ class OrderModel extends Model{
         $orderInfo['creation_time'] = date('Y-m-d H:i:s',time());
         $orderInfo['status'] = '未提交';
         $orderInfo['show'] = 1;
+        $orderInfo['type'] = 'staff';
+        $orderInfo['from_oid'] = NULL;
         unset($orderInfo['oid']);
         if (!$this->create($orderInfo)) {
             dump('复制订单信息出错');
@@ -82,7 +173,12 @@ class OrderModel extends Model{
     //获取订单下一个类别
     public function getNextType($type, $accept) {
         $nextType = $type;
-        if (!$accept)  $nextType = 'reject';
+        if (!$accept)  {
+            if ($type == 'checker')
+                $nextType = 'checkerReject';
+            elseif ($type == 'boss')
+                $nextType = 'bossReject';
+        }
         elseif ($type == 'staff') $nextType = 'checker';
         elseif ($type == 'checker') $nextType = 'boss';
         elseif ($type == 'boss')  $nextType = 'accept';
@@ -91,7 +187,8 @@ class OrderModel extends Model{
 
     //获取订单名称
     public function getStatus($type) {
-        if ($type == 'reject') return "被驳回";
+        if ($type == 'checkerReject') return "被审批者驳回";
+        elseif ($type == 'bossReject') return "被老板驳回";
         elseif ($type == 'staff') return "未提交";
         elseif ($type == 'checker') return "审批者审批中";
         elseif ($type == 'boss') return "老板审批中";
@@ -151,6 +248,35 @@ class OrderModel extends Model{
             }
         }
         return true;
+    }
+
+    //判断修复订单权限
+    public function getOrderPermission($userInfo, $orderInfo){
+        if ($userInfo['type'] == 'staff') {
+            if ($userInfo['username'] != $orderInfo['creator'])
+                return false;
+        }
+        return $userInfo['type'] == $orderInfo['type'];
+    }
+
+    public function delOrder($oid) {
+        if ($oid == NULL) return true;
+        $OrderItem = D('OrderItem');
+        $condition['oid'] = $oid;
+        $orderInfo = $this->where($condition)->find();
+        //删除历史订单
+        if (!$this->delOrder($orderInfo['from_oid']))
+            return false;
+        //删除订单物品
+        if ($OrderItem->where($condition)->delete() === false) {
+            return false;
+        }
+        //删除订单
+        if (!$this->where($condition)->delete()) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
 
