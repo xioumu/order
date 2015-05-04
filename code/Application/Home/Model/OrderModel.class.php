@@ -287,8 +287,9 @@ class OrderModel extends Model{
 
     //获取订单物品的统计信息
     public function getStatisticItemList($begin_date, $end_date, $creator) {
-        $condition['creation_time'] = array('between', array($begin_date . " 00:00:00", $end_date . " 23:59:59"));
         $condition['type'] = 'accept';
+        if ($begin_date != 'all')
+            $condition['creation_time'] = array('between', array($begin_date . " 00:00:00", $end_date . " 23:59:59"));
         if ($creator != 'all')
             $condition['creator'] = $creator;
         $orderItemList = $this->join('order_item on order.oid = order_item.oid')->where($condition)->select();

@@ -25,22 +25,44 @@ class StatisticController extends Controller {
         $this->leftMenu->index();
         $User = D('User');
         $Order = D('Order');
-        $OrderItem = D('OrderItem');
         $userInfo = $User->getInfo();
-        $statisticItemList = $Order->getStatisticItemList(I('post.begin_date'), I('post.end_date'), I('post.creator'));
-        $sumPrice = $this->getSumPrice($statisticItemList);
+
+        $statistic = $this->dealDatePostInfo();
+        $statisticItemList = $Order->getStatisticItemList($statistic['beginDate'], $statistic['endDate'], $statistic['creator']);
+        $statistic['sumPrice'] = $this->getSumPrice($statisticItemList);
         $this->assign('user', $userInfo);
         $this->assign('statisticItemList', $statisticItemList);
-        $this->assign('sumPrice', $sumPrice);
+        $this->assign('statistic', $statistic);
         $this->display('Statistic:info');
         $this->display(T('Tail/tail'));
+    }
+
+    //处理获取时间的post
+    private function dealDatePostInfo() {
+        $res = array();
+        $res['beginDate'] = I('post.begin_date');
+        $res['endDate'] = I('post.end_date');
+        $res['creator'] = I('post.creator');
+        if ($res['beginDate'] == '' || $res['endDate'] == '') {
+            $res['beginDate'] = $res['endDate'] = 'all';
+            $res['dateName'] = '全部';
+        }
+        else
+            $res['dateName'] = $res['beginDate'] . ' 至 ' . $res['endDate'];
+        if ($res['creator'] == '')
+            $res['creator'] = 'all';
+        if ($res['creator'] == 'all')
+            $res['creatorName'] = '全部';
+        else
+            $res['creatorName'] = $res['creator'];
+        return $res;
     }
     private function getSumPrice($statisticItemList) {
         $sumPrice = 0;
         foreach ($statisticItemList as $item) {
             $sumPrice += $item['sumPrice'];
         }
-        return $sumPrice;
+        return number_format($sumPrice, 2);
     }
 }
 ?>

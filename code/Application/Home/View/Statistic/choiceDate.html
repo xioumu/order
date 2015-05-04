@@ -40,7 +40,7 @@
                         </div>
                         <hr>
                         <div class="form-group">
-                            <label class="col-sm-6  control-label">自定义查询（选择查询时间段）</label>
+                            <label class="col-sm-7  control-label">自定义查询（选择查询时间段，不选为统计所有日期信息）</label>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">开始日期</label>
@@ -61,7 +61,7 @@
                                 <select class="" name="creator">
                                     <option value="all">全部</option>
                                     <volist name="creatorList" id="creator">
-                                        <option value="{$creator}">{$creator.creator}</option>
+                                        <option value="{$creator.creator}">{$creator.creator}</option>
                                     </volist>
                                 </select>
                             </div>
