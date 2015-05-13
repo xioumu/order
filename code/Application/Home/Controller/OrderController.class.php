@@ -177,5 +177,12 @@ class OrderController extends Controller {
             $this->error('提交失败');
         }
     }
+
+    //获取订单填充信息
+    public function fillOrderItemInfo() {
+        $Item = D('Item');
+        $itemInfo = $Item->getInfoByName(I('post.name'));
+        $this->ajaxReturn($itemInfo);
+    }
 }
 ?>

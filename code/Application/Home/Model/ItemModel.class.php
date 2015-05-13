@@ -36,6 +36,12 @@ class ItemModel extends Model{
         $condition['iid'] = $iid;
         return $this->where($condition)->find();
     }
+
+    //用名称获取信息
+    public function getInfoByName($name) {
+        $condition['name'] = $name;
+        return $this->where($condition)->find();
+    }
 }
 
 ?>

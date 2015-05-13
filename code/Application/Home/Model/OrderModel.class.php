@@ -31,7 +31,6 @@ class OrderModel extends Model{
     //生成修改备注
     public function getChangeRemark($orderInfo){
         if ($orderInfo['from_oid'] == NULL) return array();
-        $remarkList = array();
         $condition['oid'] = $orderInfo['from_oid'];
         $oldOrderInfo = $this->where($condition)->find();
         $userInfo = M('User')->where("type='" . $orderInfo['type'] . "'" )->find();
