@@ -119,6 +119,21 @@ class OrderController extends Controller {
         else {
             $OrderItemInfo = $OrderItem->getModifyInfo($oid, $oiid);
         }
+        if (I('post.saveItem') == '1') {
+            $Item = D('Item');
+            $oldItem = $Item->getInfoByName($OrderItemInfo['name']);
+            if ($oldItem != NULL)
+                $OrderItemInfo['iid'] = $oldItem['iid'];
+            if (!$Item->create($OrderItemInfo)) {
+                $this->error($Item->getError());
+            }
+            else{
+                if ($oldItem != NULL)
+                    $Item->save();
+                else
+                    $Item->add();
+            }
+        }
         if (!$OrderItem->create($OrderItemInfo)) {
             $this->error($OrderItem->getError());
         }

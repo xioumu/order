@@ -65,7 +65,7 @@
                             <label for="saveItem" class="col-sm-3 control-label">添加至物品列表</label>
 
                             <div class="col-sm-9 checkbox">
-                                <input type="checkbox" id="saveItem">
+                                <input type="checkbox" name="saveItem" id="saveItem" value="1">
                             </div>
                         </div>
                         <div class="form-group">
