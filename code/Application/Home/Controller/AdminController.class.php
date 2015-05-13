@@ -61,7 +61,10 @@ class AdminController extends Controller {
     }
     //检测添加用户的信息
     private function checkAddUserInfo($info) {
-        $User = M('User');
+        $User = D('User');
+        if (!$User->checkPasswdComplex($info['passwd'])) {
+            return array(false, "密码必须大于6位且同时包含数字与字母");
+        }
         if ($info['type'] == 'boss' or $info['type'] == 'checker') {
             $condition['type'] = $info['type'];
             $haveType = $User->where($condition)->find();

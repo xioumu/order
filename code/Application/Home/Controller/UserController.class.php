@@ -8,21 +8,28 @@ class UserController extends Controller {
         $this->breadcrumb = A('Breadcrumb');
         $this->public = A('Public');
     }
+    //修改密码页面
     public function changePasswd($username){
         $this->display(T('Head/head'));
         $this->navbar->index();
         $this->leftMenu->index();
         $this->breadcrumb->index();
+        $userInfo = D('User')->getInfo();
         $info['username'] = $username;
         $this->assign('info', $info);
+        $this->assign('user', $userInfo);
         $this->display('User:changePasswd');
         $this->display(T('Tail/tail'));
     }
+    //修改密码事件
     public function changePasswdEvent() {
-        $User = M('User');
+        $User = D('User');
         $data['username'] = I('post.username');
         $data['passwd'] = I('post.passwd');
         $data['repasswd'] = I('post.repasswd');
+        if (!$User->checkPasswdComplex($data['passwd'])) {
+           $this->error("密码必须大于6位且同时包含数字与字母");
+        }
         if ($data['passwd'] != $data['repasswd']) {
             $this->error('密码与重复密码不一致');
         }
@@ -36,9 +43,12 @@ class UserController extends Controller {
             $this->success('密码修改成功', U('Public/jumpIndex'));
         }
     }
+
     public function logout() {
         session('username', null);
         $this->public->jumpIndex();
     }
+
+
 }
 

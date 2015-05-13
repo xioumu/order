@@ -11,6 +11,7 @@ class UserModel extends Model{
         array('type',array('boss','staff','checker','observer'),'账号类型错误',1,'in',self::MODEL_INSERT),
     );
 
+    //获取用户类别
     public function getType($username = '') {
         if ($username == '') {
             $username = session('username');
@@ -20,6 +21,7 @@ class UserModel extends Model{
         return $type;
     }
 
+    //获取所有用户
     public function getAllUser() {
         $userList = $this->select();
         for ($i = 0; $i < count($userList); $i++) {
@@ -28,6 +30,7 @@ class UserModel extends Model{
         return $userList;
     }
 
+    //获取用户类别名称
     public function getUserTypeName($type) {
         if ($type == 'admin')  return '系统管理员';
         elseif ($type == 'staff') return '员工';
@@ -36,6 +39,7 @@ class UserModel extends Model{
         elseif ($type == 'observer') return "观察者";
     }
 
+    //获取用户信息
     public function getInfo($username = '') {
         if ($username == '') {
             $username = session('username');
@@ -47,6 +51,23 @@ class UserModel extends Model{
         return $user;
     }
 
+    //获取密码强度
+    public function checkPasswdComplex($passwd) {
+        $res = true;
+        if (strlen($passwd) < 6)
+            $res = false;
+        else {
+            $haveNumber = false;
+            $haveChar = false;
+            for ($i =  0; $i < strlen($passwd); $i++){
+                if ($passwd[$i] >= '0' && $passwd[$i] <= '9') $haveNumber = true;
+                if (('a' <= $passwd[$i] && $passwd[$i] <= 'z') || ('A' <= $passwd[$i] && $passwd[$i] <= 'Z')) $haveChar = true;
+            }
+            if (!$haveNumber || !$haveChar)
+                $res = false;
+        }
+        return $res;
+    }
 }
 
 ?>

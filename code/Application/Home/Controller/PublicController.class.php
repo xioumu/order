@@ -22,4 +22,19 @@ class PublicController extends Controller {
             echo 'type error';
         }
     }
+
+    public function checkUserOrTypeLicense($nameList, $typeList) {
+        $User = D('User');
+        $username = session('username');
+        $userType = $User->getType();
+        $nameAccept = false;
+        $typeAccept = false;
+        if (in_array($username, $nameList))
+            $nameAccept = true;
+        if (in_array($userType, $typeList))
+            $typeAccept = true;
+        if ($nameAccept || $typeAccept)
+            return true;
+        else return false;
+    }
 }

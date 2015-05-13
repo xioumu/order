@@ -10,7 +10,7 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="/order/code/index.php/Home/User/changePasswd/username/<?php echo ($navbar["username"]); ?>">修改密码</a></li>
+                <li><a href="/order/code/index.php/Home/User/changePasswd/<?php echo ($navbar["username"]); ?>">修改密码</a></li>
                 <li class="divider"></li>
                 <li><a href="/order/code/index.php/Home/User/logout">注销</a></li>
             </ul>
