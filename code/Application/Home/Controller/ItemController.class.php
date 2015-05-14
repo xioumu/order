@@ -5,6 +5,7 @@ class ItemController extends Controller {
     public function _initialize() {
         $this->navbar = A('Navbar');
         $this->leftMenu = A('LeftMenu');
+        $this->public = A('Public');
     }
 
     //展现物品列表页面
@@ -24,6 +25,7 @@ class ItemController extends Controller {
 
     //物品详情页面
     public function itemInfo($iid) {
+        $this->public->checkUserOrTypeLicence(array(), array('staff', 'checker', 'boss'));
         $this->display(T('Head/head'));
         $this->navbar->index();
         $this->leftMenu->index();
@@ -47,6 +49,7 @@ class ItemController extends Controller {
 
     //修改物品页面
     public function modifyInfoEvent($iid) {
+        $this->public->checkUserOrTypeLicence(array(), array('staff', 'checker', 'boss'));
         $Item = D('Item');
         $itemInfo = I('post.');
         if ($iid == 'add') {
@@ -77,6 +80,7 @@ class ItemController extends Controller {
 
     //删除物品事件
     public function delItemEvent(){
+        $this->public->checkUserOrTypeLicence(array(), array('staff', 'checker', 'boss'));
         $iid = I('post.iid');
         $condition['iid'] = $iid;
         $Item = D('Item');
@@ -90,6 +94,7 @@ class ItemController extends Controller {
 
     //批量删除物品事件
     public function delMultipleItemEvent(){
+        $this->public->checkUserOrTypeLicence(array(), array('staff', 'checker', 'boss'));
         $Item = D('Item');
         $deleteIid = I('post.deleteCheckbox');
         $condition['iid'] = array('in', $deleteIid);
