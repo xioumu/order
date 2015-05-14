@@ -5,6 +5,7 @@ class OrderController extends Controller {
     public function _initialize() {
         $this->navbar = A('Navbar');
         $this->leftMenu = A('LeftMenu');
+        $this->public = A('Public');
     }
 
     //初始页面，展示所有订单

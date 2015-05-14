@@ -10,6 +10,7 @@ class UserController extends Controller {
     }
     //修改密码页面
     public function changePasswd($username){
+        $this->public->checkUserOrTypeLicence(array($username), array('admin'));
         $this->display(T('Head/head'));
         $this->navbar->index();
         $this->leftMenu->index();
@@ -27,6 +28,7 @@ class UserController extends Controller {
         $data['username'] = I('post.username');
         $data['passwd'] = I('post.passwd');
         $data['repasswd'] = I('post.repasswd');
+        $this->public->checkUserOrTypeLicence(array($data['username']), array('admin'));
         if (!$User->checkPasswdComplex($data['passwd'])) {
            $this->error("密码必须大于6位且同时包含数字与字母");
         }

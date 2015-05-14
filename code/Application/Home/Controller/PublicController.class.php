@@ -23,7 +23,8 @@ class PublicController extends Controller {
         }
     }
 
-    public function checkUserOrTypeLicense($nameList, $typeList) {
+    //检测权限
+    public function checkUserOrTypeLicence($nameList, $typeList) {
         $User = D('User');
         $username = session('username');
         $userType = $User->getType();
@@ -33,8 +34,10 @@ class PublicController extends Controller {
             $nameAccept = true;
         if (in_array($userType, $typeList))
             $typeAccept = true;
-        if ($nameAccept || $typeAccept)
+        $res = ($nameAccept || $typeAccept);
+        if (!$res)
+            $this->error('权限错误', U('/Home/Index/index'));
+        else
             return true;
-        else return false;
     }
 }

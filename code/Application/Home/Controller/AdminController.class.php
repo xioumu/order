@@ -5,6 +5,8 @@ class AdminController extends Controller {
     public function _initialize() {
         $this->navbar = A('Navbar');
         $this->leftMenu = A('LeftMenu');
+        $this->public = A('Public');
+        $this->public->checkUserOrTypeLicence(array(), array('admin'));
     }
     //用户管理页面，也是默认页面
     public function userManage(){

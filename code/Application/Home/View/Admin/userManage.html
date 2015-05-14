@@ -33,6 +33,7 @@
                                 <td>{$userInfo.username}</td>
                                 <td>{$userInfo.typeName}</td>
                                 <td>
+                                    <a class="btn btn-info btn-sm " href="__MODULE__/User/changePasswd/{$userInfo.username}">修改密码</a>
                                     <if condition="$userInfo.type eq admin">
                                         <a class="btn btn-danger btn-sm disabled" href="#">删除</a>
                                         <else/>
