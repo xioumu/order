@@ -31,6 +31,7 @@ class OrderItemModel extends Model {
         return $orderItemList;
     }
 
+    //获取订单所有物品名字
     public function getOrderItemListNameKey($oid){
         $res = array();
         $itemList = $this->getOrderItemList($oid);

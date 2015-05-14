@@ -40,4 +40,34 @@ class PublicController extends Controller {
         else
             return true;
     }
+
+    //检测订单权限
+    public function checkOrderLicence($oid, $method) {
+        $Order = D('Order');
+        $User = D('User');
+        $orderInfo = $Order->getCreator($oid);
+        $userInfo = $User->getInfo();
+        if ($method == 'view') {
+            if ($userInfo['type'] == 'staff')
+                $this->checkUserOrTypeLicence(array($orderInfo['creator']), array());
+            else{
+                $this->checkUserOrTypeLicence(array(), array('boss', 'checker', 'observer'));
+            }
+        }
+        elseif ($method == 'modify') {
+            if ($userInfo['type'] == 'staff')
+                $this->checkUserOrTypeLicence(array($orderInfo['creator']), array());
+            else{
+                $this->checkUserOrTypeLicence(array(), array($orderInfo['type']));
+            }
+        }
+    }
+
+    //检测订单物品权限
+    public function checkOrderItemLicence($oiid, $method) {
+        $OrderItem = D('OrderItem');
+        $orderItemInfo = $OrderItem->getOrderItemInfo($oiid);
+        $this->checkOrderLicence($orderItemInfo['oid'], $method);
+    }
+
 }

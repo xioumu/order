@@ -309,6 +309,12 @@ class OrderModel extends Model{
         }
         return $statisticInfo;
     }
+
+    // 获取订单创始人和类型
+    public function getCreator($oid) {
+        $condition['oid'] = $oid;
+        return $this->field('type,creator')->where($condition)->find();
+    }
 }
 
 
