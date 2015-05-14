@@ -59,7 +59,9 @@
 
                             <div class="col-sm-1">
                                 <select class="" name="creator">
-                                    <option value="all">全部</option>
+                                    <if condition="$user.type neq 'staff'">
+                                        <option value="all">全部</option>
+                                    </if>
                                     <volist name="creatorList" id="creator">
                                         <option value="{$creator.creator}">{$creator.creator}</option>
                                     </volist>

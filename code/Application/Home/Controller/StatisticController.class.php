@@ -5,7 +5,10 @@ class StatisticController extends Controller {
     public function _initialize() {
         $this->navbar = A('Navbar');
         $this->leftMenu = A('LeftMenu');
+        $this->public = A('public');
     }
+
+    // 统计信息选择页面
     public function index(){
         $this->display(T('Head/head'));
         $this->navbar->index();
@@ -14,11 +17,16 @@ class StatisticController extends Controller {
         $Order = D('Order');
         $userInfo = $User->getInfo();
         $creatorList = $Order->getCreatorList();
+        if ($userInfo['type'] == 'staff') {
+            $creatorList = array(array('creator' => $userInfo['username']));
+        }
         $this->assign('user', $userInfo);
         $this->assign('creatorList', $creatorList);
         $this->display('Statistic:choiceDate');
         $this->display(T('Tail/tail'));
     }
+
+    // 统计信息页面
     public function info(){
         $this->display(T('Head/head'));
         $this->navbar->index();
@@ -29,6 +37,8 @@ class StatisticController extends Controller {
 
         $statistic = $this->dealDatePostInfo();
         $statisticItemList = $Order->getStatisticItemList($statistic['beginDate'], $statistic['endDate'], $statistic['creator']);
+        if ($userInfo['type'] == 'staff')
+            $this->public->checkUserOrTypeLicence(array($statistic['creator']), array());
         $statistic['sumPrice'] = $this->getSumPrice($statisticItemList);
         $this->assign('user', $userInfo);
         $this->assign('statisticItemList', $statisticItemList);
@@ -64,5 +74,6 @@ class StatisticController extends Controller {
         }
         return number_format($sumPrice, 2);
     }
+
 }
 ?>
