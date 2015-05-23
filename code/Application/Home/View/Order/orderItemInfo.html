@@ -62,7 +62,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="saveItem" class="col-sm-3 control-label">添加至物品列表</label>
+                            <label for="saveItem" class="col-sm-3 control-label">更新物品信息至物品库中</label>
 
                             <div class="col-sm-9 checkbox">
                                 <input type="checkbox" name="saveItem" id="saveItem" value="1">
