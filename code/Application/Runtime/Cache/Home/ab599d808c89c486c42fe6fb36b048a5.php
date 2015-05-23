@@ -82,9 +82,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <?php if($permission["order"] == true): ?><button type="submit" class="btn btn-info">保存</button>
-                                    <a class="btn btn-info" href="/order/code/index.php/Home/Order/submitEvent/<?php echo ($order["oid"]); ?>">提交审批</a>
-                                    <?php if(($order["type"] == checker) OR ($order["type"] == boss)): ?><a class="btn btn-danger" href="/order/code/index.php/Home/Order/submitEvent/<?php echo ($order["oid"]); ?>/false">驳回审批</a><?php endif; endif; ?>
+                                <?php if($permission["order"] == true): ?><button type="submit" class="btn btn-info">保存</button><?php endif; ?>
                             </div>
                         </div>
                     </form>
@@ -133,6 +131,31 @@
                             </tr><?php endforeach; endif; else: echo "" ;endif; ?>
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+        <!--/span-->
+    </div>
+    <div class="row">
+        <div class="box col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2>提交审批</h2>
+
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                class="glyphicon glyphicon-chevron-up"></i></a>
+                    </div>
+                </div>
+                <div class="box-content">
+                    <form class="form-horizontal" action="" method="post">
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <?php if($permission["order"] == true): ?><a class="btn btn-info" href="/order/code/index.php/Home/Order/submitEvent/<?php echo ($order["oid"]); ?>">提交审批</a>
+                                    <?php if(($order["type"] == checker) OR ($order["type"] == boss)): ?><a class="btn btn-danger" href="/order/code/index.php/Home/Order/submitEvent/<?php echo ($order["oid"]); ?>/false">驳回审批</a><?php endif; endif; ?>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
