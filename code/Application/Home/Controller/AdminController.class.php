@@ -37,7 +37,7 @@ class AdminController extends Controller {
             $this->error('添加失败: ' . $infoCheck[1]);
         }
         if (!$User->create($info, 1)) {
-            print_r($info);
+            //print_r($info);
             $this->error('添加失败: ' . $User->getError());
         }
         else {
