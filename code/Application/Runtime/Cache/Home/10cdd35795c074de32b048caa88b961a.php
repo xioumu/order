@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="box-content">
-                    <table id = 'order_list' class="table table-striped table-bordered bootstrap-datatable datatable ">
+                    <table id='order_list' class="table table-striped table-bordered bootstrap-datatable datatable ">
                         <thead>
                         <tr>
                             <th>名称</th>
@@ -39,20 +39,24 @@
                                 <td><?php echo ($order["creation_time"]); ?></td>
                                 <td><?php echo (round($order["total_price"],2)); ?></td>
                                 <td><span class="label
-                                <?php if($order["type"] == staff): ?>label-warning">
+                                <?php if( $order["type"] == staff): ?>label-warning">
                                     <?php elseif($order["type"] == accept): ?>
                                     label-success">
                                     <?php elseif(($order["type"] == checkerReject) OR ($order["type"] == bossReject)): ?>
                                     label-danger">
                                     <?php elseif(($order["type"] == boss) OR ($order["type"] == checker)): ?>
                                     label-info"><?php endif; ?>
-                                <?php echo ($order["status"]); ?></span></td>
+                                    <?php echo ($order["status"]); ?></span></td>
                                 <td>
                                     <a class="btn btn-info btn-sm"
                                        href="/order/code/index.php/Home/Order/modifyInfo/<?php echo ($order["oid"]); ?>">详细信息</a>
-                                    <?php if($user["type"] == staff): ?><a class="btn btn-info btn-sm" href="/order/code/index.php/Home/Order/copyOrderEvent/<?php echo ($order["oid"]); ?>">复制订单</a>
-                                        <button class="btn btn-danger btn-sm" onclick="delOrder(<?php echo ($order["oid"]); ?>)">删除
-                                        </button><?php endif; ?>
+                                    <?php if(($user["type"] == staff) OR ($user["type"] == boss)): if($user["type"] == staff): ?><a class="btn btn-info btn-sm"
+                                               href="/order/code/index.php/Home/Order/copyOrderEvent/<?php echo ($order["oid"]); ?>">复制订单</a><?php endif; ?>
+                                        <?php if(($user["type"] == 'boss') OR ($user["type"] == 'staff' AND $order["type"] == 'staff') ): ?><button class="btn btn-danger btn-sm" onclick="delOrder(<?php echo ($order["oid"]); ?>)">删除
+                                            </button>
+                                            <?php else: ?>
+                                            <button class="btn btn-danger btn-sm" onclick="delOrder(<?php echo ($order["oid"]); ?>)" disabled>删除
+                                            </button><?php endif; endif; ?>
                                 </td>
                             </tr><?php endforeach; endif; else: echo "" ;endif; ?>
                         </tbody>

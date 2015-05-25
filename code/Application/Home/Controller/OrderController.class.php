@@ -158,7 +158,7 @@ class OrderController extends Controller {
     public function delOrderItemEvent() {
         $OrderItem = D('OrderItem');
         $condition['oiid'] = I('post.oiid');
-        $this->public->checkOrderItemLicence($condition['oiid'], 'modify');
+        //$this->public->checkOrderItemLicence($condition['oiid'], 'modify');
         if (!$OrderItem->where($condition)->delete()) {
             $this->ajaxReturn('sql error');
         }
@@ -170,7 +170,7 @@ class OrderController extends Controller {
     //删除订单
     public function delOrderEvent() {
         $Order = D('Order');
-        $this->public->checkOrderLicence(I('post.oid'), 'modify');
+        //$this->public->checkOrderLicence(I('post.oid'), 'modify');
         if (!$Order->delOrder(I('post.oid'))) {
             $this->ajaxReturn('delete error');
         }
