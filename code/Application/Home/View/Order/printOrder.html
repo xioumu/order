@@ -1,0 +1,29 @@
+<html>
+<body>
+总价：{$order.total_price|round=2}
+<table  border = "1"  border = "1" style="border-collapse:collapse;" width="100%">
+    <thead>
+    <tr>
+        <th>名称</th>
+        <th>规格</th>
+        <th>单价</th>
+        <th>购买数量</th>
+        <th>购买总价(元)</th>
+        <th>备注</th>
+    </tr>
+    </thead>
+    <tbody>
+    <volist name="orderItemList" id="orderItem">
+        <tr>
+            <td>{$orderItem.name}</td>
+            <td>{$orderItem.scale}</td>
+            <td>{$orderItem.price}</td>
+            <td>{$orderItem.quantity}</td>
+            <td>{$orderItem.total_price|round=2}</td>
+            <td>{$orderItem.remark}</td>
+        </tr>
+    </volist>
+    </tbody>
+</table>
+</body>
+</html>

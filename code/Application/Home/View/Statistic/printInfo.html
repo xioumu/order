@@ -1,0 +1,31 @@
+<html>
+<body>
+日期：{$statistic.dateName}<br>
+创建者：{$statistic.creatorName}<br>
+总开销：{$statistic.sumPrice}元
+<table  border = "1"  border = "1" style="border-collapse:collapse;" width="100%">
+    <thead>
+    <tr>
+        <th>名称</th>
+        <th>价格</th>
+        <th>规格</th>
+        <th>备注</th>
+        <th>购买数量</th>
+        <th>购买总价</th>
+    </tr>
+    </thead>
+    <tbody>
+    <volist name="statisticItemList" id="item">
+        <tr>
+            <td>{$item.name}</td>
+            <td>{$item.price}</td>
+            <td>{$item.scale}</td>
+            <td>{$item.remark}</td>
+            <td>{$item.sumQuantity}</td>
+            <td>{$item.sumPrice}</td>
+        </tr>
+    </volist>
+    </tbody>
+</table>
+</body>
+</html>
