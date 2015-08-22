@@ -34,7 +34,6 @@ class StatisticController extends Controller {
         $User = D('User');
         $Order = D('Order');
         $userInfo = $User->getInfo();
-
         $statistic = $this->dealDatePostInfo();
         $statisticItemList = $Order->getStatisticItemList($statistic['beginDate'], $statistic['endDate'], $statistic['creator']);
         if ($userInfo['type'] == 'staff')
@@ -47,13 +46,37 @@ class StatisticController extends Controller {
         $this->display(T('Tail/tail'));
     }
 
+    //打印统计信息页面
+    public function printInfo($beginDate, $endDate, $creator) {
+        $Order = D('Order');
+        $statistic['beginDate'] = $beginDate;
+        $statistic['endDate'] = $endDate;
+        $statistic['creator'] = $creator;
+        $statistic = $this->dealDatePostInfo("data", $statistic);
+        $statisticItemList = $Order->getStatisticItemList($statistic['beginDate'], $statistic['endDate'], $statistic['creator']);
+        $statistic['sumPrice'] = $this->getSumPrice($statisticItemList);
+        $this->assign('statisticItemList', $statisticItemList);
+        $this->assign('statistic', $statistic);
+        $this->display('Statistic:printInfo');
+    }
+
     //处理获取时间的post
-    private function dealDatePostInfo() {
+    private function dealDatePostInfo($type = 'post', $data = '') {
         $res = array();
-        $res['beginDate'] = I('post.begin_date');
-        $res['endDate'] = I('post.end_date');
-        $res['creator'] = I('post.creator');
-        if ($res['beginDate'] == '' || $res['endDate'] == '') {
+        if ($type == 'post') {
+            //数据从post来
+            $res['beginDate'] = I('post.begin_date');
+            $res['endDate'] = I('post.end_date');
+            $res['creator'] = I('post.creator');
+        }
+        else if ($type == 'data') {
+            //数据从data来
+            $res['beginDate'] = $data['beginDate'];
+            $res['endDate'] = $data['endDate'];
+            $res['creator'] = $data['creator'];
+        }
+
+        if ($res['beginDate'] == '' || $res['endDate'] == '' || $res['beginDate'] == 'all') {
             $res['beginDate'] = $res['endDate'] = 'all';
             $res['dateName'] = '全部';
         }

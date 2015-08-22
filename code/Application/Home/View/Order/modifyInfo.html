@@ -155,7 +155,7 @@
         <div class="box col-md-12">
             <div class="box-inner">
                 <div class="box-header well" data-original-title="">
-                    <h2>提交审批</h2>
+                    <h2>操作</h2>
 
                     <div class="box-icon">
                         <a href="#" class="btn btn-minimize btn-round btn-default"><i
@@ -172,6 +172,7 @@
                                         <a class="btn btn-danger" href="__MODULE__/Order/submitEvent/{$order.oid}/false">驳回审批</a>
                                     </if>
                                 </if>
+                                <a class="btn btn-info" href="__MODULE__/Order/printOrder/{$order.oid}"  target="_blank">打印</a>
                             </div>
                         </div>
                     </form>

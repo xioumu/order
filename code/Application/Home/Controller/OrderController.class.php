@@ -102,6 +102,17 @@ class OrderController extends Controller {
         $this->display(T('Tail/tail'));
     }
 
+    //打印订单页面
+    public function printOrder($oid) {
+        $Order = D('Order');
+        $OrderItem = D('OrderItem');
+        $orderInfo = $Order->getOrderInfo($oid);
+        $orderItemList = $OrderItem->getOrderItemList($oid);
+        $this->assign('order', $orderInfo);
+        $this->assign('orderItemList', $orderItemList);
+        $this->display('Order:printOrder');
+    }
+
     //修改订单事件
     public function modifyInfoEvent($oid) {
         $this->public->checkOrderLicence($oid, 'modify');
